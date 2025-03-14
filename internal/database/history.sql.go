@@ -10,7 +10,7 @@ import (
 )
 
 const listHistory = `-- name: ListHistory :many
-SELECT id, point, reason, date FROM history
+SELECT id, point, reason, created_at, updated_at FROM history
 `
 
 func (q *Queries) ListHistory(ctx context.Context) ([]History, error) {
@@ -26,7 +26,8 @@ func (q *Queries) ListHistory(ctx context.Context) ([]History, error) {
 			&i.ID,
 			&i.Point,
 			&i.Reason,
-			&i.Date,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}

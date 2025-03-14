@@ -3,7 +3,9 @@
 CREATE TABLE points(
     id UUID PRIMARY KEY,
     total INTEGER,
-    goal INTEGER NOT NULL
+    goal INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
 -- +goose StatementEnd
 

@@ -4,7 +4,8 @@ CREATE TABLE history(
     id UUID PRIMARY KEY,
     point INTEGER NOT NULL,
     reason TEXT NOT NULL,
-    date INTEGER NOT NULL
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
 -- +goose StatementEnd
 
