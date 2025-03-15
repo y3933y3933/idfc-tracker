@@ -18,6 +18,24 @@ func (q *Queries) CreateUser(ctx context.Context, name string) error {
 	return err
 }
 
+const getUserByID = `-- name: GetUserByID :one
+SELECT id, name
+FROM users
+WHERE id = ?
+`
+
+type GetUserByIDRow struct {
+	ID   int64
+	Name string
+}
+
+func (q *Queries) GetUserByID(ctx context.Context, id int64) (GetUserByIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserByID, id)
+	var i GetUserByIDRow
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
+}
+
 const getUserByName = `-- name: GetUserByName :one
 SELECT id, name 
 FROM users 
