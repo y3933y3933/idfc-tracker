@@ -57,7 +57,6 @@ to quickly create a Cobra application.`,
 
 		}
 
-		// ask goal
 		goalOptions := []string{"10", "20", "30", "40", "50"}
 		selectedGoal, _ := pterm.DefaultInteractiveSelect.WithOptions(goalOptions).WithDefaultOption("10").Show("Please select your goal")
 
@@ -76,6 +75,10 @@ to quickly create a Cobra application.`,
 			Goal:   goalInt64,
 		})
 		checkDbError(err)
+		userIDStr := strconv.FormatInt(user.ID, 10)
+		err = dbQueries.SetActiveUserID(cmd.Context(), userIDStr)
+		checkDbError(err)
+
 		pterm.Println("🎉 Great job,", pterm.LightYellow(name)+"! Your goal is set to", pterm.LightYellow(selectedGoal), "points. Let's get started! 🚀")
 
 	},
