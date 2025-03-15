@@ -23,3 +23,28 @@ func (q *Queries) CreatePoint(ctx context.Context, arg CreatePointParams) error 
 	_, err := q.db.ExecContext(ctx, createPoint, arg.UserID, arg.Goal)
 	return err
 }
+
+const getPointByUserID = `-- name: GetPointByUserID :one
+SELECT id, user_id, total, goal 
+FROM points
+WHERE user_id = ?
+`
+
+type GetPointByUserIDRow struct {
+	ID     int64
+	UserID int64
+	Total  int64
+	Goal   int64
+}
+
+func (q *Queries) GetPointByUserID(ctx context.Context, userID int64) (GetPointByUserIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getPointByUserID, userID)
+	var i GetPointByUserIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Total,
+		&i.Goal,
+	)
+	return i, err
+}
