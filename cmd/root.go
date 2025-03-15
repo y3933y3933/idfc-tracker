@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"os"
 
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
 	"github.com/y3933y3933/idfc-tracker/internal/database"
 )
