@@ -24,7 +24,7 @@ type History struct {
 type Point struct {
 	ID        int64
 	UserID    int64
-	Total     sql.NullInt64
+	Total     int64
 	Goal      int64
 	CreatedAt sql.NullTime
 	UpdatedAt sql.NullTime
