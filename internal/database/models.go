@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Config struct {
@@ -28,6 +29,7 @@ type Point struct {
 	Total     sql.NullInt64
 	Goal      int64
 	UpdatedAt sql.NullTime
+	CreatedAt time.Time
 }
 
 type User struct {
