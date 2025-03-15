@@ -1,12 +1,12 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"strings"
 
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,23 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		// ask name
+		var name string
+		for {
+			name, _ = pterm.DefaultInteractiveTextInput.Show("What is your name? (in English)")
+			name = strings.TrimSpace(name)
+
+			if name != "" {
+				break
+			}
+			pterm.Warning.Println("Name cannot be empty. Please enter your name.")
+		}
+
+		// ask goal
+		goalOptions := []string{"10", "20", "30", "40", "50"}
+		selectedGoal, _ := pterm.DefaultInteractiveSelect.WithOptions(goalOptions).WithDefaultOption("10").Show("Please select your goal")
+		pterm.Println("🎉 Great job,", pterm.LightYellow(name)+"! Your goal is set to", pterm.LightYellow(selectedGoal), "points. Let's get started! 🚀")
+
 	},
 }
 
