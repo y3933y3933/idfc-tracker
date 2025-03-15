@@ -6,21 +6,32 @@ package database
 
 import (
 	"database/sql"
-	"time"
 )
 
+type Config struct {
+	Key   string
+	Value string
+}
+
 type History struct {
-	ID        interface{}
+	ID        int64
+	UserID    int64
 	Point     int64
 	Reason    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
 }
 
 type Point struct {
-	ID        interface{}
+	ID        int64
+	UserID    int64
 	Total     sql.NullInt64
 	Goal      int64
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	UpdatedAt sql.NullTime
+}
+
+type User struct {
+	ID        int64
+	Name      string
+	CreatedAt sql.NullTime
 }
