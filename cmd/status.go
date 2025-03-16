@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -30,51 +31,25 @@ to quickly create a Cobra application.`,
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)
 
-		activeUserIDStr, err := dbQueries.GetActiveUserID(cmd.Context())
-
-		if err == nil {
-			activeUserID, err := strconv.ParseInt(activeUserIDStr, 10, 64)
-			if err != nil {
-				pterm.Error.Println("String convert to int fail")
-				return
-			}
-
-			user, err := dbQueries.GetUserByID(cmd.Context(), activeUserID)
-			if err != nil {
-				if errors.Is(err, sql.ErrNoRows) {
-					pterm.Warning.Println("No user found. Run init to create a user and set your goal.")
-					return
-				}
-				pterm.Error.Printf("Database error: %v\n", err)
-				return
-			}
-
-			userPoint, err := dbQueries.GetPointByUserID(cmd.Context(), activeUserID)
-			if err != nil {
-				pterm.Error.Printf("Database error: %v\n", err)
-				return
-			}
-
-			percent := (userPoint.Total) / (userPoint.Goal)
-			fmt.Println(percent)
-			pterm.DefaultBasicText.Printf("Hi %s!\n", user.Name)
-			pterm.DefaultBasicText.Printf("你的目標點數是: %d\n", userPoint.Goal)
-			pterm.DefaultBasicText.Printf("你累積的離職點數是: %d\n", userPoint.Total)
-			pterm.DefaultBasicText.Printf("----------------------------------\n")
-			pterm.DefaultBasicText.Printf("你目前的狀態為：%s", getClosestStatus(int(percent)))
-
-			// pterm.DefaultBasicText.Printf("Hi %s! \n你當前的狀態: %s", user.Name, getClosestStatus(int(percent)))
-
-		}
+		activeUser, err := getActiveUser(ctx, dbQueries)
 
 		if err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				pterm.Warning.Println("No user found. Run init to create a user and set your goal.")
-				return
-			}
+			pterm.Warning.Println("No user found. Run init to create a user and set your goal.")
+		}
+
+		userPoint, err := dbQueries.GetPointByUserID(cmd.Context(), activeUser.ID)
+		if err != nil {
 			pterm.Error.Printf("Database error: %v\n", err)
 			return
 		}
+
+		percent := (userPoint.Total) / (userPoint.Goal)
+
+		pterm.DefaultBasicText.Printf("Hi %s!\n", activeUser.Name)
+		pterm.DefaultBasicText.Printf("你的目標點數是: %d\n", userPoint.Goal)
+		pterm.DefaultBasicText.Printf("你累積的離職點數是: %d\n", userPoint.Total)
+		pterm.DefaultBasicText.Printf("----------------------------------\n")
+		pterm.DefaultBasicText.Printf("你目前的狀態為：%s", getClosestStatus(int(percent)))
 
 	},
 }
@@ -125,4 +100,27 @@ func getClosestStatus(percentage int) string {
 	}
 
 	return statusMap[closest]
+}
+
+func getActiveUser(ctx context.Context, dbQueries *database.Queries) (database.GetUserByIDRow, error) {
+	activeUserIDStr, err := dbQueries.GetActiveUserID(ctx)
+	if err != nil {
+		return database.GetUserByIDRow{}, fmt.Errorf("failed to get active user ID: %w", err)
+
+	}
+
+	activeUserID, err := strconv.ParseInt(activeUserIDStr, 10, 64)
+	if err != nil {
+		return database.GetUserByIDRow{}, fmt.Errorf("failed to convert active user ID to integer: %w", err)
+	}
+
+	user, err := dbQueries.GetUserByID(ctx, activeUserID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return database.GetUserByIDRow{}, fmt.Errorf("no user found for active user ID: %w", err)
+		}
+		return database.GetUserByIDRow{}, fmt.Errorf("failed to retrieve user from DB: %w", err)
+	}
+
+	return user, nil
 }
