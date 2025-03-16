@@ -4,12 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"context"
-	"database/sql"
-	"errors"
-	"fmt"
 	"sort"
-	"strconv"
 
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
@@ -100,27 +95,4 @@ func getClosestStatus(percentage int) string {
 	}
 
 	return statusMap[closest]
-}
-
-func getActiveUser(ctx context.Context, dbQueries *database.Queries) (database.GetUserByIDRow, error) {
-	activeUserIDStr, err := dbQueries.GetActiveUserID(ctx)
-	if err != nil {
-		return database.GetUserByIDRow{}, fmt.Errorf("failed to get active user ID: %w", err)
-
-	}
-
-	activeUserID, err := strconv.ParseInt(activeUserIDStr, 10, 64)
-	if err != nil {
-		return database.GetUserByIDRow{}, fmt.Errorf("failed to convert active user ID to integer: %w", err)
-	}
-
-	user, err := dbQueries.GetUserByID(ctx, activeUserID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return database.GetUserByIDRow{}, fmt.Errorf("no user found for active user ID: %w", err)
-		}
-		return database.GetUserByIDRow{}, fmt.Errorf("failed to retrieve user from DB: %w", err)
-	}
-
-	return user, nil
 }
