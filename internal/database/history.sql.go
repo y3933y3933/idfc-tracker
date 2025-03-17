@@ -9,6 +9,15 @@ import (
 	"context"
 )
 
+const clearUserHistory = `-- name: ClearUserHistory :exec
+DELETE FROM history WHERE user_id = ?
+`
+
+func (q *Queries) ClearUserHistory(ctx context.Context, userID int64) error {
+	_, err := q.db.ExecContext(ctx, clearUserHistory, userID)
+	return err
+}
+
 const insertHistory = `-- name: InsertHistory :exec
 INSERT INTO history (user_id, point, reason)
 VALUES (?, ?, ?)

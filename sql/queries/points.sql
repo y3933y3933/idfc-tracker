@@ -16,3 +16,7 @@ WHERE user_id = ?;
 UPDATE points
 SET goal = ?
 WHERE user_id = ?;
+
+
+-- name: ResetUserPoints :exec
+UPDATE points SET total = 0 WHERE user_id = ?

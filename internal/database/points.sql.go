@@ -49,6 +49,15 @@ func (q *Queries) GetPointByUserID(ctx context.Context, userID int64) (GetPointB
 	return i, err
 }
 
+const resetUserPoints = `-- name: ResetUserPoints :exec
+UPDATE points SET total = 0 WHERE user_id = ?
+`
+
+func (q *Queries) ResetUserPoints(ctx context.Context, userID int64) error {
+	_, err := q.db.ExecContext(ctx, resetUserPoints, userID)
+	return err
+}
+
 const updateGoalByUserID = `-- name: UpdateGoalByUserID :exec
 UPDATE points
 SET goal = ?
