@@ -23,13 +23,15 @@ var ofCsv bool
 // exportCmd represents the export command
 var exportCmd = &cobra.Command{
 	Use:   "export",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Export the history data to a file",
+	Long: `This command allows the user to export their history data in either JSON or CSV format.
+The user can choose the format using the --json or --csv flag, and the file will be saved in the current directory.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker export --json
+  $ idfc-tracker export --csv
+
+This will export all the history records in the selected format, providing a quick way to back up or analyze the data.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)

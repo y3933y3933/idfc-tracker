@@ -21,13 +21,16 @@ var (
 // historyCmd represents the history command
 var historyCmd = &cobra.Command{
 	Use:   "history",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "View the user's point history",
+	Long: `This command displays the history of all points added by the active user.
+The data will be shown in a table format, listing the date, points added, and reason for each entry.
+You can also filter the results by specifying a date range using the --start and --end flags.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker history
+  $ idfc-tracker history --start "2025-01-01" --end "2025-01-31"
+
+This will show the user's history between the specified start and end dates, making it easier to review recent activity.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)

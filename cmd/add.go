@@ -16,13 +16,16 @@ import (
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Add points to the active user with a reason",
+	Long: `This command allows the active user to add points, providing a reason for the addition.
+The points added will be stored in the 'history' table along with the reason, and the 'points' table will be updated with the new total.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker add
+  How many points would you like to add? 10
+  Reason for adding points: Completed a big task!
+
+This will add 10 points to the user's total and store the reason "Completed a big task!" in the history.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)

@@ -14,13 +14,15 @@ import (
 // statusCmd represents the status command
 var statusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Show the current points and goal status",
+	Long: `This command displays the current total points of the active user along with their goal points.
+It also includes a progress bar showing how close the user is to reaching their goal.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker status
+
+This will show the user's total points, their goal, and a visual representation of the progress toward their goal.
+For example, if the user has 80 points and the goal is 100, the progress bar will show 80% completion.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		ctx := cmd.Context()

@@ -14,13 +14,16 @@ import (
 // clearCmd represents the clear command
 var clearCmd = &cobra.Command{
 	Use:   "clear",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Clear the current user's points and history",
+	Long: `This command allows the active user to clear all their accumulated points and delete all entries in the history.
+It will reset the 'points' table and remove all data from the 'history' table related to the active user.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker clear
+  All points and history for the active user will be cleared.
+  
+This is useful if you want to start fresh or reset your progress.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)

@@ -18,13 +18,17 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Initialize a new user and set up initial goal",
+	Long: `This command allows the user to create a new user by providing their name.
+It will store the user's name in the 'users' table and set the initial goal points in the 'points' table.
+Additionally, it will set the newly created user as the active user in the 'config' table.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker init
+  Enter your name: Joanne
+  Set your initial goal points: 100
+
+This will create a new user 'Joanne' with 100 goal points and set them as the active user.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)

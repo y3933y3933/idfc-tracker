@@ -14,13 +14,15 @@ import (
 // setCmd represents the set command
 var setCmd = &cobra.Command{
 	Use:   "set",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Set or update the goal points for the active user",
+	Long: `This command allows the user to set or update their goal points.
+The user will be prompted to enter the desired goal value, and the 'points' table will be updated accordingly.
+Example usage:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+  $ idfc-tracker set --goal 150
+  New goal set to 150 points.
+
+This is useful when the user wants to adjust their goal or reset their target.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		goal, _ := cmd.Flags().GetUint("goal")
 

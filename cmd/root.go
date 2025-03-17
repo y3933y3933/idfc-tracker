@@ -20,13 +20,10 @@ var db *sql.DB
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "idfc-tracker",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "A CLI tool to track your progress towards a goal through points",
+	Long: `IDFC Tracker is a command-line tool that helps you track your progress towards a personal goal by adding points over time. 
+You can create a user, set a goal, and then incrementally add points to track your progress.
+Each point addition is logged with a reason, and you can view your history, set a new goal, and clear all your data at any time.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
