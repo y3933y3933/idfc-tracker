@@ -6,3 +6,8 @@ VALUES (?, ?, CURRENT_TIMESTAMP);
 SELECT id, user_id, total, goal 
 FROM points
 WHERE user_id = ?;
+
+-- name: UpdateTotalByUserID :exec
+UPDATE points
+SET total = ?
+WHERE user_id = ?;
