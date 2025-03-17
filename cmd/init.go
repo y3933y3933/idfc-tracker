@@ -24,7 +24,7 @@ It will store the user's name in the 'users' table and set the initial goal poin
 Additionally, it will set the newly created user as the active user in the 'config' table.
 Example usage:
 
-  $ idfc-tracker init
+  $ idfc init
   Enter your name: Joanne
   Set your initial goal points: 100
 
