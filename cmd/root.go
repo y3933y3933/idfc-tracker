@@ -6,10 +6,7 @@ package cmd
 import (
 	"context"
 	"database/sql"
-	"errors"
-	"fmt"
 	"os"
-	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
@@ -75,27 +72,4 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
-
-func getActiveUser(ctx context.Context, dbQueries *database.Queries) (database.GetUserByIDRow, error) {
-	activeUserIDStr, err := dbQueries.GetActiveUserID(ctx)
-	if err != nil {
-		return database.GetUserByIDRow{}, fmt.Errorf("failed to get active user ID: %w", err)
-
-	}
-
-	activeUserID, err := strconv.ParseInt(activeUserIDStr, 10, 64)
-	if err != nil {
-		return database.GetUserByIDRow{}, fmt.Errorf("failed to convert active user ID to integer: %w", err)
-	}
-
-	user, err := dbQueries.GetUserByID(ctx, activeUserID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return database.GetUserByIDRow{}, fmt.Errorf("no user found for active user ID: %w", err)
-		}
-		return database.GetUserByIDRow{}, fmt.Errorf("failed to retrieve user from DB: %w", err)
-	}
-
-	return user, nil
 }

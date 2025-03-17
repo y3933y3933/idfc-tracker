@@ -26,7 +26,7 @@ to quickly create a Cobra application.`,
 		ctx := cmd.Context()
 		dbQueries := ctx.Value("dbQueries").(*database.Queries)
 
-		activeUser, err := getActiveUser(ctx, dbQueries)
+		activeUser, err := database.GetActiveUser(ctx, dbQueries)
 
 		if err != nil {
 			pterm.Warning.Println("No user found. Run init to create a user and set your goal.")
