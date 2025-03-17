@@ -44,6 +44,9 @@ This is useful if you want to start fresh or reset your progress.`,
 		pterm.Info.Println("Clearing history and resetting total points...")
 
 		err = dbQueries.ResetUserPoints(ctx, activeUser.ID)
+		if err != nil {
+			log.Fatalf("Rest user points fail:%v", err)
+		}
 		err = dbQueries.ClearUserHistory(ctx, activeUser.ID)
 		if err != nil {
 			log.Fatalf("Database error:%v\n", err)
