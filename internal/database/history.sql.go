@@ -18,6 +18,42 @@ func (q *Queries) ClearUserHistory(ctx context.Context, userID int64) error {
 	return err
 }
 
+const getHistoryByUserID = `-- name: GetHistoryByUserID :many
+SELECT id, user_id, point, reason, created_at
+FROM history
+WHERE user_id = ?
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetHistoryByUserID(ctx context.Context, userID int64) ([]History, error) {
+	rows, err := q.db.QueryContext(ctx, getHistoryByUserID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []History
+	for rows.Next() {
+		var i History
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Point,
+			&i.Reason,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const insertHistory = `-- name: InsertHistory :exec
 INSERT INTO history (user_id, point, reason)
 VALUES (?, ?, ?)

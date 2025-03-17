@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Config struct {
@@ -18,7 +19,7 @@ type History struct {
 	UserID    int64
 	Point     int64
 	Reason    string
-	CreatedAt sql.NullTime
+	CreatedAt time.Time
 }
 
 type Point struct {

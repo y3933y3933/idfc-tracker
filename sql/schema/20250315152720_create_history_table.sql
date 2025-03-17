@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS history (
     user_id INTEGER NOT NULL,
     point INTEGER NOT NULL,
     reason TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 -- +goose StatementEnd
