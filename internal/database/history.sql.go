@@ -7,6 +7,7 @@ package database
 
 import (
 	"context"
+	"time"
 )
 
 const clearUserHistory = `-- name: ClearUserHistory :exec
@@ -27,6 +28,49 @@ ORDER BY created_at DESC
 
 func (q *Queries) GetHistoryByUserID(ctx context.Context, userID int64) ([]History, error) {
 	rows, err := q.db.QueryContext(ctx, getHistoryByUserID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []History
+	for rows.Next() {
+		var i History
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Point,
+			&i.Reason,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getHistoryByUserIDAndDateRange = `-- name: GetHistoryByUserIDAndDateRange :many
+SELECT id, user_id, point, reason, created_at
+FROM history
+WHERE user_id = ?
+AND (created_at BETWEEN ? AND ?)
+ORDER BY created_at DESC
+`
+
+type GetHistoryByUserIDAndDateRangeParams struct {
+	UserID        int64
+	FromCreatedAt time.Time
+	ToCreatedAt   time.Time
+}
+
+func (q *Queries) GetHistoryByUserIDAndDateRange(ctx context.Context, arg GetHistoryByUserIDAndDateRangeParams) ([]History, error) {
+	rows, err := q.db.QueryContext(ctx, getHistoryByUserIDAndDateRange, arg.UserID, arg.FromCreatedAt, arg.ToCreatedAt)
 	if err != nil {
 		return nil, err
 	}

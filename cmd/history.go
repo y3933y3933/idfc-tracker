@@ -13,6 +13,11 @@ import (
 	"github.com/y3933y3933/idfc-tracker/internal/database"
 )
 
+var (
+	start string
+	end   string
+)
+
 // historyCmd represents the history command
 var historyCmd = &cobra.Command{
 	Use:   "history",
@@ -34,7 +39,20 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		history, err := dbQueries.GetHistoryByUserID(ctx, activeUser.ID)
+		startDate, endDate := parseDateRange(start, end)
+
+		pterm.Info.Println("Fetching history...")
+		pterm.Print("\n")
+
+		history, err := dbQueries.GetHistoryByUserIDAndDateRange(ctx, database.GetHistoryByUserIDAndDateRangeParams{
+			UserID:        activeUser.ID,
+			FromCreatedAt: startDate,
+			ToCreatedAt:   endDate,
+		})
+		if err != nil {
+			pterm.Error.Println("Failed to fetch history.")
+			log.Fatal(err)
+		}
 		if err != nil {
 			log.Fatalf("get history err:%v\n", err)
 		}
@@ -42,9 +60,6 @@ to quickly create a Cobra application.`,
 			pterm.Info.Println("No history records found.")
 			return
 		}
-
-		pterm.Info.Println("Fetching history...")
-		pterm.Print("\n")
 
 		// 設定表格標頭
 		tableData := [][]string{
@@ -83,4 +98,34 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// historyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	historyCmd.Flags().StringVar(&start, "start", "", "Start date (format: YYYY-MM-DD)")
+	historyCmd.Flags().StringVar(&end, "end", "", "End date (format: YYYY-MM-DD)")
+
+}
+
+func parseDateRange(start string, end string) (time.Time, time.Time) {
+	const dateFormat = time.DateOnly
+
+	startTime := time.Now().AddDate(0, 0, -365)
+	if start != "" {
+		parsedFrom, err := time.Parse(dateFormat, start)
+		if err == nil {
+			startTime = parsedFrom
+		} else {
+			pterm.Warning.Println("Invalid --from date format. Using default (365 days ago).")
+		}
+	}
+
+	endTime := time.Now()
+	if end != "" {
+		parsedTo, err := time.Parse(dateFormat, end)
+		if err == nil {
+			endTime = parsedTo
+		} else {
+			pterm.Warning.Println("Invalid --to date format. Using default (today).")
+		}
+	}
+
+	return startTime, endTime
 }
