@@ -6,6 +6,7 @@ package cmd
 import (
 	"context"
 	"database/sql"
+	"log"
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -49,7 +50,10 @@ Each point addition is logged with a reason, and you can view your history, set 
 
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
 		if db != nil {
-			db.Close()
+			err := db.Close()
+			if err != nil {
+				log.Fatalf("db close fail: %v", err)
+			}
 		}
 	},
 }

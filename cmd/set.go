@@ -63,6 +63,9 @@ func init() {
 	// setCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	setCmd.Flags().UintP("goal", "g", 0, "Set the goal points.")
-	setCmd.MarkFlagRequired("goal")
+	err := setCmd.MarkFlagRequired("goal")
+	if err != nil {
+		log.Fatalf("mark goal flag required fail:%v", err)
+	}
 
 }

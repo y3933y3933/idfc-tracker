@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"log"
 	"sort"
 
 	"github.com/pterm/pterm"
@@ -105,5 +106,8 @@ func showProgress(current, total int) {
 		p.Increment()
 	}
 
-	p.Stop()
+	_, err := p.Stop()
+	if err != nil {
+		log.Fatalf("Stop the ProgressbarPrinter fail:%v", err)
+	}
 }
