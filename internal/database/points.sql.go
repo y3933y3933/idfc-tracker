@@ -49,6 +49,22 @@ func (q *Queries) GetPointByUserID(ctx context.Context, userID int64) (GetPointB
 	return i, err
 }
 
+const updateGoalByUserID = `-- name: UpdateGoalByUserID :exec
+UPDATE points
+SET goal = ?
+WHERE user_id = ?
+`
+
+type UpdateGoalByUserIDParams struct {
+	Goal   int64
+	UserID int64
+}
+
+func (q *Queries) UpdateGoalByUserID(ctx context.Context, arg UpdateGoalByUserIDParams) error {
+	_, err := q.db.ExecContext(ctx, updateGoalByUserID, arg.Goal, arg.UserID)
+	return err
+}
+
 const updateTotalByUserID = `-- name: UpdateTotalByUserID :exec
 UPDATE points
 SET total = ?

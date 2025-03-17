@@ -11,3 +11,8 @@ WHERE user_id = ?;
 UPDATE points
 SET total = ?
 WHERE user_id = ?;
+
+-- name: UpdateGoalByUserID :exec
+UPDATE points
+SET goal = ?
+WHERE user_id = ?;
