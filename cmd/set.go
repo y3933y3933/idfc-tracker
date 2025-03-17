@@ -31,6 +31,7 @@ to quickly create a Cobra application.`,
 
 		if err != nil {
 			pterm.Warning.Println("No user found. Run init to create a user and set your goal.")
+			return
 		}
 
 		err = dbQueries.UpdateGoalByUserID(ctx, database.UpdateGoalByUserIDParams{
