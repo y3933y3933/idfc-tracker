@@ -39,13 +39,11 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		percent := (userPoint.Total) / (userPoint.Goal)
+		percent := float64(userPoint.Total) / float64(userPoint.Goal) * 100
 
 		pterm.DefaultBasicText.Printf("Hi %s!\n", activeUser.Name)
-		pterm.DefaultBasicText.Printf("你的目標點數是: %d\n", userPoint.Goal)
-		pterm.DefaultBasicText.Printf("你累積的離職點數是: %d\n", userPoint.Total)
-		pterm.DefaultBasicText.Printf("----------------------------------\n")
-		pterm.DefaultBasicText.Printf("你目前的狀態為：%s", getClosestStatus(int(percent)))
+		showProgress(int(userPoint.Total), int(userPoint.Goal))
+		pterm.DefaultBasicText.Printf("你目前的狀態為：%s\n", getClosestStatus(int(percent)))
 
 	},
 }
@@ -96,4 +94,14 @@ func getClosestStatus(percentage int) string {
 	}
 
 	return statusMap[closest]
+}
+
+func showProgress(current, total int) {
+	p, _ := pterm.DefaultProgressbar.WithTotal(total).WithTitle("目前進度").WithShowElapsedTime(false).Start()
+
+	for i := 0; i < current; i++ {
+		p.Increment()
+	}
+
+	p.Stop()
 }
