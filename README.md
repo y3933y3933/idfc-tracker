@@ -118,8 +118,6 @@ $ idfc-tracker status
 - [ ] Feature 2: Implement data visualization (charts, progress graphs)
 - [ ] Feature 3: Integrate notifications for reminders
 
-See the [open issues](https://github.com/your-username/idfc-tracker/issues) for a full list of proposed features and known issues.
-
 
 ## Acknowledgments
 
