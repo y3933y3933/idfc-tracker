@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -99,7 +100,7 @@ func getFormat() string {
 }
 
 func exportCsv(fileName string, history []database.History) error {
-	f, err := os.Create(fileName)
+	f, err := os.Create(filepath.Clean(fileName))
 	if err != nil {
 		return err
 	}
@@ -127,7 +128,8 @@ func exportCsv(fileName string, history []database.History) error {
 }
 
 func exportJSON(fileName string, content interface{}) error {
-	f, err := os.Create(fileName)
+
+	f, err := os.Create(filepath.Clean(fileName))
 	if err != nil {
 		return err
 	}
