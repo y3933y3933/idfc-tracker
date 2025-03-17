@@ -15,6 +15,10 @@ import (
 
 const dbName = "app.db"
 
+type contextKey string
+
+const dbQueriesKey contextKey = "dbQueries"
+
 var db *sql.DB
 
 // rootCmd represents the base command when called without any subcommands
@@ -39,7 +43,7 @@ Each point addition is logged with a reason, and you can view your history, set 
 
 		dbQueries := database.New(db)
 
-		cmd.SetContext(context.WithValue(cmd.Context(), "dbQueries", dbQueries))
+		cmd.SetContext(context.WithValue(cmd.Context(), dbQueriesKey, dbQueries))
 		return nil
 	},
 
