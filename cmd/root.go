@@ -6,6 +6,7 @@ package cmd
 import (
 	"context"
 	"database/sql"
+	"log"
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -14,6 +15,10 @@ import (
 )
 
 const dbName = "app.db"
+
+type contextKey string
+
+const dbQueriesKey contextKey = "dbQueries"
 
 var db *sql.DB
 
@@ -39,13 +44,16 @@ Each point addition is logged with a reason, and you can view your history, set 
 
 		dbQueries := database.New(db)
 
-		cmd.SetContext(context.WithValue(cmd.Context(), "dbQueries", dbQueries))
+		cmd.SetContext(context.WithValue(cmd.Context(), dbQueriesKey, dbQueries))
 		return nil
 	},
 
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
 		if db != nil {
-			db.Close()
+			err := db.Close()
+			if err != nil {
+				log.Fatalf("db close fail: %v", err)
+			}
 		}
 	},
 }

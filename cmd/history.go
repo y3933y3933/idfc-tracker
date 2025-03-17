@@ -81,7 +81,10 @@ This will show the user's history between the specified start and end dates, mak
 		}
 
 		// 使用 PTerm 印出表格
-		pterm.DefaultTable.WithHasHeader().WithBoxed().WithData(tableData).Render()
+		err = pterm.DefaultTable.WithHasHeader().WithBoxed().WithData(tableData).Render()
+		if err != nil {
+			log.Fatalf("render table fail: %v", err)
+		}
 
 		// 顯示成功訊息
 		pterm.Success.Println("History displayed successfully.")
